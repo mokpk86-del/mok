@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual Language Master - វេទិការៀនអក្សរ និងវាយអក្សរ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700;800&family=Poppins:wght@300;400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kantumruy Pro', 'Poppins', sans-serif; }
+body {
+    background: linear-gradient(135deg, #090d16 0%, #1a103c 50%, #2b0b3a 100%);
+    min-height: 100vh;
+    color: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 850px;
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    position: relative;
+}
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+
+/* HOME HUB SCREEN */
+.hub-header { text-align: center; margin-bottom: 35px; }
+.hub-header h1 {
+    font-size: 30px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f43f5e 0%, #a855f7 50%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+.hub-header p { font-size: 14px; color: #94a3b8; }
+
+.hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.hub-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.hub-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #f43f5e;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(244, 63, 94, 0.25);
+}
+.hub-card .icon { font-size: 50px; margin-bottom: 15px; }
+.hub-card h2 { font-size: 20px; color: #fff; margin-bottom: 8px; font-weight: 700; }
+.hub-card p { font-size: 12.5px; color: #94a3b8; }
+
+/* COMMON APP HEADER */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+}
+.app-header h2 { font-size: 20px; color: #f43f5e; font-weight: 800; }
+.btn-back {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-back:hover { background: #f43f5e; }
+
+/* SUB TABS & GRIDS */
+.sub-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.sub-tab-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 18px;
+    border-radius: 12px;
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+}
+.sub-tab-btn.active, .sub-tab-btn:hover { background: #f43f5e; color: #fff; border-color: transparent; }
+
+.sub-content { display: none; }
+.sub-content.active { display: block; }
+
+.grid-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 10px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 5px;
+}
+.char-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.char-card:hover { background: #f43f5e; border-color: transparent; transform: scale(1.08); }
+.char-card .letter { font-size: 22px; font-weight: 700; color: #fff; }
+.char-card .sub { font-size: 10px; color: #cbd5e1; margin-top: 2px; }
+
+/* TYPING AREA */
+.typing-arena {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+}
+.target-box { font-size: 50px; font-weight: 800; color: #f43f5e; margin: 10px 0; }
+.hint-text { font-size: 13.5px; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 8px; display: inline-block; margin-bottom: 15px; }
+.input-control {
+    width: 100%; max-width: 260px; padding: 12px; font-size: 18px;
+    background: rgba(255,255,255,0.08); border: 2px solid #f43f5e; border-radius: 12px;
+    color: #fff; text-align: center; outline: none; margin-bottom: 15px;
+}
+.btn-action {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff; border: none; padding: 10px 22px; border-radius: 12px;
+    font-weight: 700; cursor: pointer; margin-top: 10px;
+}
+.btn-action:hover { transform: scale(1.05); }
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- SCREEN 0: MAIN HUB (HOME) -->
+    <div id="screen-hub" class="screen active">
+        <div class="hub-header">
+            <h1>🌟 DUAL LANGUAGE MASTER</h1>
+            <p>សូមជ្រើសរើសភាសាដែលលោកអ្នកចង់សិក្សា និងហាត់វាយអក្សរ៖</p>
+        </div>
+        <div class="hub-grid">
+            <div class="hub-card" onclick="goToScreen('screen-khmer')">
+                <div class="icon">🇰🇭</div>
+                <h2>រៀនភាសាខ្មែរ</h2>
+                <p>ព្យញ្ជនៈ ៣៣តួ ស្រះ និងហាត់វាយអក្សរខ្មែរលើ Keyboard</p>
+            </div>
+            <div class="hub-card" onclick="goToScreen('screen-english')">
+                <div class="icon">🇬🇧</div>
+                <h2>Learn English</h2>
+                <p>Alphabet, Vowels & Interactive English Typing Practice</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: KHMER LEARNING -->
+    <div id="screen-khmer" class="screen">
+        <div class="app-header">
+            <h2>🇰🇭 ថ្នាក់រៀនភាសាខ្មែរ</h2>
+            <button class="btn-back" onclick="goToScreen('screen-hub')">🏠 ត្រឡប់ដើម</button>
+        </div>
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" onclick="switchKhTab(0)">១. ព្យញ្ជនៈ ៣៣តួ</button>
+            <button class="sub-tab-btn" onclick="switchKhTab(1)">២. ស្រះខ្មែរ</button>
+            <button class="sub-tab-btn" onclick="switchKhTab(2)">៣. ហាត់វាយ Keyboard</button>
+        </div>
+
+        <div class="sub-content active" id="kh-sec-0"><div class="grid-box" id="khConsonants"></div></div>
+        <div class="sub-content" id="kh-sec-1"><div class="grid-box" id="khVowels"></div></div>
+        <div class="sub-content" id="kh-sec-2">
+            <div class="typing-arena">
+                <p style="font-size:13px; color:#94a3b8;">វាយអក្សរតាមតម្រូវការ៖</p>
+                <div class="target-box" id="khTarget">ក</div>
+                <div class="hint-text">💡 ចុចប៊ូតុង: <b id="khKeyName" style="color:#38bdf8;">K</b></div><br>
+                <input type="text" id="khInput" class="input-control" placeholder="វាយទីនេះ..." autocomplete="off" oninput="checkKhTyping(this)">
+                <div id="khMsg" style="font-weight:bold; min-height:22px; color:#4ade80;"></div>
+                <div style="font-size:14px; color:#38bdf8; margin-top:10px;">🏆 ពិន្ទុ: <span id="khScore">0</span></div>
+                <button class="btn-action" onclick="nextKhTest()">តួអក្សរបន្ទាប់ ➡️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: ENGLISH LEARNING -->
+    <div id="screen-english" class="screen">
+        <div class="app-header">
+            <h2>🇬🇧 English Learning Hub</h2>
+            <button class="btn-back" onclick="goToScreen('screen-hub')">🏠 Home Menu</button>
+        </div>
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" onclick="switchEnTab(0)">1. English Alphabet</button>
+            <button class="sub-tab-btn" onclick="switchEnTab(1)">2. Typing Practice</button>
+        </div>
+
+        <div class="sub-content active" id="en-sec-0"><div class="grid-box" id="enAlphabet"></div></div>
+        <div class="sub-content" id="en-sec-1">
+            <div class="typing-arena">
+                <p style="font-size:13px; color:#94a3b8;">Type the matching English letter:</p>
+                <div class="target-box" id="enTarget">A</div><br>
+                <input type="text" id="enInput" class="input-control" placeholder="Type here..." autocomplete="off" oninput="checkEnTyping(this)">
+                <div id="enMsg" style="font-weight:bold; min-height:22px; color:#4ade80;"></div>
+                <div style="font-size:14px; color:#38bdf8; margin-top:10px;">🏆 Score: <span id="enScore">0</span></div>
+                <button class="btn-action" onclick="nextEnTest()">Next Letter ➡️</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Sound FX (Web Audio API)
+function playSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+    } catch(e) {}
+}
+
+function goToScreen(screenId) {
+    playSound();
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+// KHMER DATA & LOGIC
+const khC = [
+    {l: 'ក', s: 'កោ'}, {l: 'ខ', s: 'ខោ'}, {l: 'គ', s: 'គោ'}, {l: 'ឃ', s: 'ឃោ'}, {l: 'ង', s: 'ងោ'},
+    {l: 'ច', s: 'ចោ'}, {l: 'ឆ', s: 'ឆោ'}, {l: 'ជ', s: 'ជោ'}, {l: 'ឈ', s: 'ឈោ'}, {l: 'ញ', s: 'ញោ'},
+    {l: 'ដ', s: 'ដោ'}, {l: 'ឋ', s: 'ឋោ'}, {l: 'ឌ', s: 'ឌោ'}, {l: 'ឍ', s: 'ឍោ'}, {l: 'ណ', s: 'ណោ'},
+    {l: 'ត', s: 'តោ'}, {l: 'ថ', s: 'ថោ'}, {l: 'ទ', s: 'ទោ'}, {l: 'ធ', s: 'ធោ'}, {l: 'ន', s: 'នោ'},
+    {l: 'ប', s: 'បោ'}, {l: 'ផ', s: 'ផោ'}, {l: 'ព', s: 'ពោ'}, {l: 'ភ', s: 'ភោ'}, {l: 'ម', s: 'ម៉ោ'},
+    {l: 'យ', s: 'យោ'}, {l: 'រ', s: 'រោ'}, {l: 'ល', s: 'លោ'}, {l: 'វ', s: 'វោ'}, {l: 'ស', s: 'សោ'},
+    {l: 'ហ', s: 'ហោ'}, {l: 'ឡ', s: 'ឡោ'}, {l: 'អ', s: 'អោ'}
+];
+const khV = [{l: 'ា', s: 'អា'}, {l: 'ិ', s: 'អិ'}, {l: 'ី', s: 'អី'}, {l: 'ុ', s: 'អុ'}, {l: 'ូ', s: 'អូ'}, {l: 'េ', s: 'អេ'}];
+
+const khGridC = document.getElementById('khConsonants');
+khC.forEach(item => {
+    let d = document.createElement('div');
+    d.className = 'char-card';
+    d.innerHTML = `<span class="letter">${item.l}</span><span class="sub">${item.s}</span>`;
+    d.onclick = () => { playSound(); alert('អានថា៖ ' + item.s); };
+    khGridC.appendChild(d);
+});
+
+const khGridV = document.getElementById('khVowels');
+khV.forEach(item => {
+    let d = document.createElement('div');
+    d.className = 'char-card';
+    d.innerHTML = `<span class="letter">${item.l}</span><span class="sub">${item.s}</span>`;
+    d.onclick = () => { playSound(); alert('ស្រះ៖ ' + item.s); };
+    khGridV.appendChild(d);
+});
+
+function switchKhTab(idx) {
+    playSound();
+    let tabs = document.querySelectorAll('#screen-khmer .sub-tab-btn');
+    let secs = document.querySelectorAll('#screen-khmer .sub-content');
+    tabs.forEach((t, i) => { t.classList.toggle('active', i === idx); secs[i].classList.toggle('active', i === idx); });
+}
+
+const khTests = [{c: 'ក', k: 'k'}, {c: 'ខ', k: 'K'}, {c: 'ច', k: 'j'}, {c: 'ត', k: 't'}, {c: 'ប', k: 'b'}, {c: 'ម', k: 'm'}];
+let khIdx = 0, khScr = 0;
+function nextKhTest() {
+    playSound();
+    khIdx = Math.floor(Math.random() * khTests.length);
+    document.getElementById('khTarget').innerText = khTests[khIdx].c;
+    document.getElementById('khKeyName').innerText = khTests[khIdx].k.toUpperCase();
+    document.getElementById('khInput').value = '';
+    document.getElementById('khMsg').innerText = '';
+    document.getElementById('khInput').focus();
+}
+function checkKhTyping(el) {
+    if(el.value === khTests[khIdx].c) {
+        playSound();
+        document.getElementById('khMsg').innerText = '✨ ត្រឹមត្រូវខ្លាំងណាស់!';
+        khScr += 10;
+        document.getElementById('khScore').innerText = khScr;
+        setTimeout(nextKhTest, 700);
+    }
+}
+
+// ENGLISH DATA & LOGIC
+const enLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const enGrid = document.getElementById('enAlphabet');
+enLetters.forEach(l => {
+    let d = document.createElement('div');
+    d.className = 'char-card';
+    d.innerHTML = `<span class="letter">${l}</span><span class="sub">Letter</span>`;
+    d.onclick = () => { playSound(); alert('English Letter: ' + l); };
+    enGrid.appendChild(d);
+});
+
+function switchEnTab(idx) {
+    playSound();
+    let tabs = document.querySelectorAll('#screen-english .sub-tab-btn');
+    let secs = document.querySelectorAll('#screen-english .sub-content');
+    tabs.forEach((t, i) => { t.classList.toggle('active', i === idx); secs[i].classList.toggle('active', i === idx); });
+}
+
+let enIdx = 0, enScr = 0;
+function nextEnTest() {
+    playSound();
+    enIdx = Math.floor(Math.random() * enLetters.length);
+    document.getElementById('enTarget').innerText = enLetters[enIdx];
+    document.getElementById('enInput').value = '';
+    document.getElementById('enMsg').innerText = '';
+    document.getElementById('enInput').focus();
+}
+function checkEnTyping(el) {
+    if(el.value.toUpperCase() === enLetters[enIdx]) {
+        playSound();
+        document.getElementById('enMsg').innerText = '🌟 Great Job!';
+        enScr += 10;
+        document.getElementById('enScore').innerText = enScr;
+        setTimeout(nextEnTest, 700);
+    }
+}
+
+// Init tests
+nextKhTest();
+nextEnTest();
+</script>
+
+</body>
+</html>
